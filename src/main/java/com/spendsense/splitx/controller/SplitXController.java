@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.spendsense.splitx.dto.JoinGroupRequestDTO;
+import com.spendsense.splitx.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,10 +22,6 @@ import com.spendsense.splitx.entity.Repayments;
 import com.spendsense.splitx.entity.Transaction;
 import com.spendsense.splitx.entity.User;
 import com.spendsense.splitx.entity.UserGroupMapping;
-import com.spendsense.splitx.service.GroupService;
-import com.spendsense.splitx.service.GroupTransactionLogsService;
-import com.spendsense.splitx.service.TransactionService;
-import com.spendsense.splitx.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -42,6 +40,9 @@ public class SplitXController {
 	
 	@Autowired
 	private GroupTransactionLogsService groupTransactionLogsService;
+
+	@Autowired
+	private DummyUserService dummyUserService;
 	
 	@GetMapping("/api/get-user-details")
 	public User getUser(HttpServletRequest request) {
@@ -76,9 +77,13 @@ public class SplitXController {
 
 	@PostMapping("/api/join-group")
 	@Transactional(rollbackOn = Exception.class)
-	public ResponseEntity<Group> joinGroup(@RequestBody Group group,HttpServletRequest request) throws Exception {
+	public ResponseEntity<Group> joinGroup(@RequestBody JoinGroupRequestDTO joinGroupRequestDTO, HttpServletRequest request) throws Exception {
 		Long userId = (Long) request.getAttribute("userId");
-
+		Group group = joinGroupRequestDTO.getGroup();
+		Long tempUserId = joinGroupRequestDTO.getUserId();
+		if(tempUserId != null) {
+			dummyUserService.replaceDummyUserDetails(tempUserId, userId, group);
+		}
 		Group joinedGroup = groupService.joinGroup(group, userId);
 		return ResponseEntity.ok(joinedGroup);
 	}
@@ -149,12 +154,12 @@ public class SplitXController {
 
 	@PostMapping("/api/add-member/{groupCode}")
 	@Transactional(rollbackOn = Exception.class)
-	public ResponseEntity<Group> addMember(@PathVariable String groupCode, @RequestBody User user, HttpServletRequest request) throws Exception {
+	public ResponseEntity<Group> addMember(@PathVariable String groupCode, @RequestBody List<User> users, HttpServletRequest request) throws Exception {
 		Long userId = (Long) request.getAttribute("userId");
 		User addedBy = userService.getUserById(userId);
-		User createdDummyUser = userService.createDummyUser(user, addedBy);
+		List<User> createdDummyUsers = userService.createDummyUsers(users, addedBy);
 		Group group = groupService.getGroupDetailsByGroupCode(groupCode);
-		Group updatedGroup = groupService.joinGroup(group, createdDummyUser.getUserId());
+		Group updatedGroup = groupService.joinGroup(group, createdDummyUsers);
 		return ResponseEntity.ok(updatedGroup);
 	}
 

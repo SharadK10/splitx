@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import com.spendsense.splitx.entity.User;
 import com.spendsense.splitx.repository.UserRepository;
 
+import java.util.List;
+
 @Service
 public class UserService {
 	
@@ -21,7 +23,14 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-	public User createDummyUser(User user, User addedBy) {
+	public List<User> createDummyUsers(List<User> users, User addedBy) {
+		for(User user : users) {
+			createDummyUser(user, addedBy);
+		}
+		return users;
+	}
+
+	private void createDummyUser(User user, User addedBy) {
 		String dummyEmail = DummyEmailGenerator.generateDummyEmail(user);
 		while(true) {
 			User existingUser = findUserByEmail(dummyEmail);
@@ -31,8 +40,6 @@ public class UserService {
 			dummyEmail = DummyEmailGenerator.generateDummyEmail(user);
 		}
 		user.setEmail(dummyEmail);
-		user.setDummy(true);
-		user.setAddedBy(addedBy);
-		return userRepository.save(user);
+		userRepository.save(user);
 	}
 }

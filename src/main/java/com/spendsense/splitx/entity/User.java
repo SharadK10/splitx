@@ -46,28 +46,6 @@ public class User {
 	@JsonIgnore
 	private List<Repayments> toRepaymnets;
 
-	public Boolean isDummy() {
-		return isDummy;
-	}
-
-	public User getAddedBy() {
-		return addedBy;
-	}
-
-	public void setDummy(Boolean dummy) {
-		isDummy = dummy;
-	}
-
-	public void setAddedBy(User addedBy) {
-		this.addedBy = addedBy;
-	}
-
-	@Nullable
-	private Boolean isDummy;
-	@ManyToOne
-	@JoinColumn(name = "added_by_user_id")
-	private User addedBy;
-
 	public User() {
 
 	}

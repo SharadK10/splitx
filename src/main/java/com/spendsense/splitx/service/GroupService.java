@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -132,6 +133,13 @@ public class GroupService {
 	public List<GroupLogs> getGroupLogs(String groupCode) {
 		Group group = groupRepository.findByGroupCode(groupCode);
 		return groupLogsRepository.findAllByGroup(group);
+	}
+	@Transactional(rollbackOn = Exception.class)
+	public Group joinGroup(Group group, List<User> users) throws Exception {
+		for(User user : users) {
+			joinGroup(group, user.getUserId());
+		}
+		return group;
 	}
 	
 }
