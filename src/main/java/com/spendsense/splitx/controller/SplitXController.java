@@ -163,4 +163,14 @@ public class SplitXController {
 		return ResponseEntity.ok(updatedGroup);
 	}
 
+	@GetMapping("/api/get-dummy-users/{groupCode}")
+	public ResponseEntity<List<User>> getDummyUsers(@PathVariable String groupCode) {
+		try {
+			List<User> dummyUsers = dummyUserService.getDummyUsersInGroup(groupCode);
+			return ResponseEntity.ok(dummyUsers);
+		} catch (Exception e) {
+			return ResponseEntity.internalServerError().build();
+		}
+	}
+
 }

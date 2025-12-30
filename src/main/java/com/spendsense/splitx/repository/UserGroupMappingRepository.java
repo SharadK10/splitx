@@ -19,4 +19,6 @@ public interface UserGroupMappingRepository extends JpaRepository<UserGroupMappi
 	@Query(value = "SELECT * FROM user_group_mapping_table WHERE USER_ID = :userId and GROUP_ID = :groupId",nativeQuery = true)
 	UserGroupMapping checkUserInGroup(long userId, long groupId);
 
+	List<UserGroupMapping> findAllByGroupId(long groupId);
+
 }

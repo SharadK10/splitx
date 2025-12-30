@@ -40,6 +40,7 @@ public class UserService {
 			dummyEmail = DummyEmailGenerator.generateDummyEmail(user);
 		}
 		user.setEmail(dummyEmail);
+		user.setDummyUser(true);
 		userRepository.save(user);
 	}
 }

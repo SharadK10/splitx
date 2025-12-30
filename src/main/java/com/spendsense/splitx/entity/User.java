@@ -46,6 +46,16 @@ public class User {
 	@JsonIgnore
 	private List<Repayments> toRepaymnets;
 
+	public Boolean isDummyUser() {
+		return isDummyUser;
+	}
+
+	public void setDummyUser(Boolean dummyUser) {
+		isDummyUser = dummyUser;
+	}
+
+	private Boolean isDummyUser = false;
+
 	public User() {
 
 	}
@@ -60,7 +70,7 @@ public class User {
 	
 	}
 	
-	public User(long userId, String name, String email, LocalDateTime joinedTimestamp) {
+	public User(long userId, String name, String email) {
 		super();
 		this.id = userId;
 		this.name = name;
