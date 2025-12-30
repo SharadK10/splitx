@@ -7,6 +7,7 @@ import java.util.Map;
 import com.spendsense.splitx.dto.JoinGroupRequestDTO;
 import com.spendsense.splitx.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -164,12 +165,12 @@ public class SplitXController {
 	}
 
 	@GetMapping("/api/get-dummy-users/{groupCode}")
-	public ResponseEntity<List<User>> getDummyUsers(@PathVariable String groupCode) {
+	public ResponseEntity<?> getDummyUsers(@PathVariable String groupCode) {
 		try {
 			List<User> dummyUsers = dummyUserService.getDummyUsersInGroup(groupCode);
 			return ResponseEntity.ok(dummyUsers);
 		} catch (Exception e) {
-			return ResponseEntity.internalServerError().build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
 

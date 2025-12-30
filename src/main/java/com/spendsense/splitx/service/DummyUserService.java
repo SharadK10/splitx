@@ -42,6 +42,9 @@ public class DummyUserService {
 
     public List<User> getDummyUsersInGroup(String groupCode) {
         Group group = groupRepository.findByGroupCode(groupCode);
+        if(group == null) {
+            throw new RuntimeException("Group not found with code: " + groupCode);
+        }
         List<UserGroupMapping> userGroupMappings = userGroupMappingRepository.findAllByGroupId(group.getId());
         List<User> dummyUsers = new ArrayList<>();
         for(UserGroupMapping mapping : userGroupMappings) {
