@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface RepaymentsRepository extends JpaRepository<Repayments, Long>{
 
-	String replaceTempUserDetailsQuery = "UPDATE REPAYMENTS SET FROM_ID = CASE WHEN FROM_ID = :tempUserId THEN :actualUserId ELSE FROM_ID END, TO_ID = CASE WHEN TO_ID = :tempUserId THEN :actualUserId ELSE TO_ID END WHERE FROM_ID = :tempUserId OR TO_ID = :tempUserId";
+	String replaceTempUserDetailsQuery = "UPDATE repayments SET FROM_ID = CASE WHEN FROM_ID = :tempUserId THEN :actualUserId ELSE FROM_ID END, TO_ID = CASE WHEN TO_ID = :tempUserId THEN :actualUserId ELSE TO_ID END WHERE FROM_ID = :tempUserId OR TO_ID = :tempUserId";
 	
 	@Query(value = "INSERT INTO REPAYMENTS (FROM_ID, TO_ID, AMOUNT, TXN_ID) VALUES (:fromId, :toId, :amount, :txnId)", nativeQuery = true)
 	Repayments saveById(long fromId, long toId, double amount, long txnId);
