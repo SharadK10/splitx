@@ -13,10 +13,9 @@ import java.util.List;
 
 @Repository
 public interface UserTransactionMappingRepository extends JpaRepository<UserTransactionMapping, Long>{
-    String replaceTempUserDetailsQuery = "UPDATE USER_TRANSACTION_MAPPING SET USER_ID = :actualUserId WHERE USER_ID = :tempUserId";
+    String replaceTempUserDetailsQuery = "UPDATE user_transaction_mapping SET USER_ID = :actualUserId WHERE USER_ID = :tempUserId";
     @Modifying
     @Transactional
     @Query(value = replaceTempUserDetailsQuery, nativeQuery = true)
     int replaceTempUserDetails(long tempUserId, long actualUserId);
-
 }
